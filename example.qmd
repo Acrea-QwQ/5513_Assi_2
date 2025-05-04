@@ -1,2 +1,16 @@
 Changes from main Q5.
 Change from Q3.
+
+## Easy Plot Example  
+
+Load library.
+```{r}
+library(ggplot2)
+```
+
+Here is a simple plot
+```{r}
+ggplot(iris, aes(Species)) + 
+  geom_bar()
+```
+
