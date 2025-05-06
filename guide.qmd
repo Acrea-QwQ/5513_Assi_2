@@ -1,7 +1,249 @@
 ---
-title: "guide"
+title: "Git Guide"
 author: "Xingyu Wang"
-format: pdf
+format:
+  pdf:
+    documentclass: article
+    margin-left: 2cm  
+    margin-right: 2cm 
+    margin-top: 3cm
+    margin-bottom: 3cm  
+    include-in-header:
+      text: |
+        \usepackage{float}
+        \usepackage[section]{placeins}
+        \let\origfigure\figure
+        \let\endorigfigure\endfigure
+        \renewenvironment{figure}[1][]{\origfigure[H]\centering}{\endorigfigure}
 editor: visual
+execute: 
+  eval: false  
 ---
 
+# Goal No.1
+
+Create a new RStudio Project. In this folder, create a simple qmd file called example.qmd that can be knitted into a HTML file. Show the result of the knitted file.
+
+-   Step 1: Create a New RProject: In RStudio: File → New Project → New directory → Fill in a new project name → Select location via Browser → Create Project
+
+-   Step 2: Create the example.qmd and show the result of the knitted file: File → New file → Quarto Document → Fill in the title and check HTML option → create → Remove example material → Save as "example"→ Render to show the result
+
+# Goal No.2
+
+From the command line interface, initialize this folder as a git repository and push it to the GitHub classroom repository.
+
+-   Step 1: Create a new repo on GitHub. Please ensure the new repo is empty with no content(Do not select "Add README" or "Add license").
+
+-   Step 2: Navigate back to RStudio's terminal pane and run the following code.
+
+```{r}
+git init    
+   # This will initializes a .git repository configuration directory.
+git add .
+git commit -m "Initialt commit" 
+git branch -M main    
+   # Change the current branch name from Master to main.
+git remote add origin https://github.com/Your_user_name/Your_repo_name  
+   #Modify the content according to your repo.
+git push -u origin main
+```
+
+Note: You can also find the above code on the created repo's homepage.
+
+-   Step 3: Refresh the GitHub page to view the synchronized files.(see @fig-roi)
+
+![result of initialization](screenshot/1-gd.JPG){#fig-roi fig-align="center" width="585"}
+
+# Goal No.3
+
+Create a new branch called testbranch. Modify the file example.qmd and add the changes to both the local and remote repositories.
+
+-   Step 1: Create testbranch，and make some changes in example.qmd and push to git repo
+
+```{r}
+git branch testbranch
+git checkout testbranch
+```
+
+-   Step 2: Edit example.qmd: Add "Change from Q3" in the first line.
+
+```{r}
+git add example.qmd
+git commit -m "Changed .qmd file for Q3."
+git push origin testbranch
+```
+
+(See the result in @fig-roq3)
+
+![Result of editing example.qmd on testbranch.](screenshot/1.2.JPG){#fig-roq3 fig-align="center" width="585"}
+
+# Goal No.4
+
+Create a folder called data, and add the data from Assignment 1 to that folder. Amend the previous commit to include the data folder. Push this amended commit to the remote.
+
+-   Step 1: Create data folder and move Assignment 1 dataset into it
+
+```{r}
+mkdir data
+```
+
+-   Step 2: Copy Assignment 1 dataset into data folder.
+
+```{r}
+git add data
+git commit --amend -m "Also add data file after changed .qmd."  
+```
+
+Note: Using "-m" option after "--amend" avoids entering the text editor for commit messages.
+
+-   Step 3: Push the commit to the remote
+
+```{r}
+git push -f origin testbranch 
+```
+
+Note: Since commit history will be changed, --force is needed. Only I'm editing this branch, so it's safe - but could cause conflicts if others built on old commits.
+
+![Result of amend commit.](screenshot/3.JPG){#fig-roac fig-align="center" width="585"}
+
+Git log shows taht commit was modified (from @fig-roq3 to @fig-roac).
+
+# Goal No.5
+
+Switch back to the main branch and modify example.qmd in a different way such that it will conflict with testbranch. Commit and push these changes.
+
+```{r}
+# switch back to main.
+git checkout main
+
+# Edit the first line of example.qmd file.
+git add example.qmd
+git commit -m "Changed .qmd from main."
+git push origin main
+```
+
+# Goal No.6
+
+Merge the changes in testbranch onto main. Show the conflict and fixing the merge conflict. Push the changes to GitHub, showing the status and changes in GitHub.
+
+-   Step 1: Merge the changes.
+
+```{r}
+git merge testbranch
+```
+
+-   Step 2: Merge conflict detected(See @fig-conflict).
+
+![Result of conlict.](screenshot/4.JPG){#fig-conflict fig-align="center" width="468" height="269"}
+
+-   Step 3: Conflict resolution: preserve both modifications and delete the conflict indicators(See @fig-rc).
+
+![Result of conflict resolved.](screenshot/5.JPG){#fig-rc fig-align="center" width="468"}
+
+```{r}
+git add example.qmd
+git commit -m "Resolved merge conflict."
+git push origin main
+```
+
+See the status @fig-sig and changes @fig-cig in GitHub
+
+![Status in GitHub](screenshot/7-gd.JPG){#fig-sig fig-align="center" width="585"}
+
+![Changes in GitHub](screenshot/6.JPG){#fig-cig fig-align="center" width="585"}
+
+# Goal No.7
+
+Tag this commit v1.0 on main using an annotated tag.
+
+```{r}
+git tag -a v1.0 
+```
+
+Note: By default, git tag generates lightweight tags; the -a option creates annotated tags.
+
+After running the code, Vim will open - enter a tag comment, for example: "Create tag v1.0", then exit: Press Esc, type :wq.
+
+# Goal No.8
+
+Delete branch testbranch locally and on the remote.
+
+```{r}
+git branch -d testbranch
+git push origin -d testbranch
+```
+
+# Goal No.9
+
+Show the commit log in condensed form in the terminal.
+
+```{r}
+git log --oneline
+```
+
+Note: "--oneline" option shows each commit as one line - just hash and message. (See the result in @fig-licf)
+
+![Commit log in condensed form.](screenshot/9.JPG){#fig-licf fig-align="center" width="585"}
+
+# Goal No.10
+
+On main, create a new section in example.qmd that includes an easy to make plot. Commit the changes, and demonstrate using the command line interface how to undo the commit without losing your local changes.
+
+-   Step 1: Add \# and a space before section text to create a new section
+
+```{r}
+# Easy Plot Example  
+```
+
+-   Step 2: Draw a simple plot. Load library.
+
+```{r}
+library(ggplot2)
+```
+
+Draw a simple plot.
+
+```{r}
+ggplot(iris, aes(Species)) + 
+  geom_bar()
+```
+
+-   Step 3: Commit the changes
+
+```{r}
+git add example.qmd
+git commit -m "Drew a simple plot."
+git log –oneline
+```
+
+(See the result in @fig-gl)
+
+![git log](screenshot/9.2.JPG){#fig-gl fig-align="center" width="585"}
+
+-   Step 4: 2 ways to undo the commit without losing local changes.
+
+Approach 1: Use mixed reset
+
+```{r}
+git reset HEAD~1 
+```
+
+Running the code will undo the previous change to the working area, leaving it unstaged. (See @fig-rmr)
+
+![Result of using mixed reset.](screenshot/10.JPG){#fig-rmr fig-align="center" width="500"}
+
+Edit commit message(Test mixed reset) and recommit.
+
+Approach 2: Use soft reset
+
+```{r}
+git reset --soft HEAD~1
+```
+
+The code above will undo changes to the staging area.(See @fig-rsr)
+
+![Result of using soft reset.](screenshot/12.JPG){#fig-rsr fig-align="center" width="500"}
+
+Edit commit message(Tested soft and mixed reset.) and recommit. (See @fig-gitlog )
+
+![Git log.](screenshot/14.JPG){#fig-gitlog fig-align="center" width="500"}
